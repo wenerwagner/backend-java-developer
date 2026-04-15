@@ -1,23 +1,22 @@
 package com.cmanager.app.controller;
 
 import com.cmanager.app.authentication.data.LoginRequest;
+import com.cmanager.app.authentication.domain.Role;
+import com.cmanager.app.authentication.domain.User;
+import com.cmanager.app.authentication.repository.UserRepository;
 import com.cmanager.app.config.AbstractPostgresContainerIT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
@@ -42,24 +41,26 @@ class AuthControllerIT extends AbstractPostgresContainerIT {
     @Autowired
     JwtDecoder jwtDecoder;
 
-    @TestConfiguration
-    static class TestUsersConfig {
-        /**
-         * Define um UserDetailsService em memória para os testes.
-         * O AuthenticationManager (de SecurityConfig) vai usar esse bean.
-         */
-        @Bean
-        UserDetailsService userDetailsService(PasswordEncoder encoder) {
-            var admin = User.withUsername("alice")
-                    .password(encoder.encode("password"))
-                    .roles("ADMIN") // gera ROLE_ADMIN
-                    .build();
-            var user = User.withUsername("bob")
-                    .password(encoder.encode("password"))
-                    .roles("USER") // gera ROLE_USER
-                    .build();
-            return new InMemoryUserDetailsManager(admin, user);
-        }
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setupUsers() {
+        userRepository.deleteAll();
+        User user = new User();
+        user.setUsername("alice");
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setRole(Role.ADMIN);
+        userRepository.save(user);
+
+        user = new User();
+        user.setUsername("bob");
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setRole(Role.USER);
+        userRepository.save(user);
     }
 
     @Test
