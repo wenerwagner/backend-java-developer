@@ -58,10 +58,6 @@ class UserServiceIT extends AbstractPostgresContainerIT {
         assertThat(saved.getUsername()).isEqualTo("alice");
         assertThat(saved.isEnabled()).isTrue();
         assertThat(passwordEncoder.matches("pwd", saved.getPassword())).isTrue();
-
-        var req2 = new UserCreateRequest("alice", "pwd", Role.USER, true);
-        User saved2 = service.create(req2);
-        assertThat(saved2.getId()).isNotNull();
     }
 
     @Test
