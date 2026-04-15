@@ -8,6 +8,7 @@ CREATE TABLE episode
     air_date       date,
     air_time       time WITHOUT TIME ZONE,
     air_stamp      TIMESTAMP WITHOUT TIME ZONE,
+    runtime        INTEGER,
     rating         DECIMAL(5, 2),
     summary        VARCHAR(255),
     fk_show        VARCHAR(255)             NOT NULL,
