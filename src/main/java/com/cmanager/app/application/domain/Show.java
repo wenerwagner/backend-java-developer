@@ -1,15 +1,11 @@
 package com.cmanager.app.application.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +35,9 @@ public class Show {
     private BigDecimal rating;
     @Column(name = "SUMMARY")
     private String summary;
+
+    @OneToMany(mappedBy = "show")
+    private List<Episode> episodes;
 
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime createdAt;

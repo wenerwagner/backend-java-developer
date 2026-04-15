@@ -31,10 +31,16 @@ public class Episode {
     private LocalTime airTime;
     @Column(name = "AIR_STAMP")
     private LocalDateTime airStamp;
+    @Column(name = "RUNTIME")
+    private Integer runtime;
     @Column(name = "RATING", precision = 5, scale = 2)
     private BigDecimal rating;
     @Column(name = "SUMMARY")
     private String summary;
+
+    @ManyToOne
+    @JoinColumn(name="FK_SHOW", nullable=false)
+    private Show show;
 
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime createdAt;
