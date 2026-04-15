@@ -34,8 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
-                        .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
+                        .anyRequest().permitAll()
                 )
                 .authenticationProvider(daoAuthProvider)
                 .oauth2ResourceServer(oauth2 -> oauth2
